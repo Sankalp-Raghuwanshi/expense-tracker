@@ -1,0 +1,39 @@
+// Prisma schema for the Personal Finance Expense Tracker.
+// Uses PostgreSQL for production (Vercel Postgres).
+// For local development, use SQLite — see lib/db.ts for adapter logic.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+// PostgreSQL is the production provider (Vercel Postgres).
+// Local dev uses SQLite via a separate adapter — the schema is compatible
+// with both since we only use basic types (String, Int, DateTime).
+datasource db {
+  provider = "postgresql"
+}
+
+model Expense {
+  // UUID primary key — avoids sequential IDs leaking row count.
+  id String @id @default(uuid())
+
+  // Client-generated idempotency key. The UNIQUE constraint ensures that
+  // retried POSTs with the same key won't create duplicate expenses.
+  // This is the core of our "safe retry" strategy.
+  idempotencyKey String @unique @map("idempotency_key")
+
+  // Amount stored in **cents** (integer) to avoid floating-point rounding
+  // errors inherent in IEEE 754. e.g., $12.50 is stored as 1250.
+  // All arithmetic on the backend and frontend uses this integer form;
+  // conversion to/from dollars happens only at the UI boundary.
+  amount Int
+
+  category    String
+  description String
+  date        DateTime
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("expenses")
+}
