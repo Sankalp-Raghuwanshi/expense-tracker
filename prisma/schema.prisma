@@ -12,7 +12,6 @@ generator client {
 // with both since we only use basic types (String, Int, DateTime).
 datasource db {
   provider = "postgresql"
-  url      = env("PRISMA_DATABASE_URL")
 }
 
 model Expense {
