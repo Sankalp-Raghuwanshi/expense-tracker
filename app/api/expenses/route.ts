@@ -12,7 +12,7 @@
  */
 import { type NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
-import { Prisma } from "@/app/generated/prisma/client";
+import { Prisma } from "@/app/generated/prisma";
 
 // Force dynamic rendering — this route reads/writes a database.
 export const dynamic = "force-dynamic";

@@ -3,7 +3,7 @@
 // For local development, use SQLite — see lib/db.ts for adapter logic.
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
@@ -12,6 +12,7 @@ generator client {
 // with both since we only use basic types (String, Int, DateTime).
 datasource db {
   provider = "postgresql"
+  url      = env("PRISMA_DATABASE_URL")
 }
 
 model Expense {
